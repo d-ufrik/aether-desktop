@@ -11,18 +11,52 @@ One OpenAI-compatible endpoint. Local models, cloud providers, usage tracking, a
 ## Install
 
 ```bash
-curl -fsSL https://aether-models.ufrik.com/desktop/macos/install.sh | sh
-```
-
-OR
-
-```bash
 curl -fsSL https://raw.githubusercontent.com/d-ufrik/aether-desktop/main/install.sh | sh
 ```
 
-The installer downloads the latest DMG, verifies its checksum, installs `Aether.app` into `/Applications`, and launches it.
+The installer downloads the latest DMG from GitHub Releases, installs `Aether.app` into `/Applications`, and launches it.
 
 **Manual download** — grab the latest DMG from the [Releases](../../releases) tab and drag `Aether.app` into Applications.
+
+---
+
+## Pre-loading a model manually (optional)
+
+If the app cannot reach the model download server — corporate firewall, restricted network, or slow connection — you can place the model file on disk before launching Aether. The app detects the file and skips the download automatically.
+
+**1. Install the Hugging Face CLI** (once):
+
+```bash
+pip install huggingface_hub
+```
+
+**2. Create the model directory and download:**
+
+| Model | RAM | Command |
+|---|---|---|
+| Qwopus 3.5 4B Coder | 8 GB+ | `huggingface-cli download Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF Qwopus3.5-4B-Coder-MTP-Q4_K_M.gguf --local-dir /tmp/aether-model` |
+| Gemma 4 E2B | 8 GB+ | `huggingface-cli download google/gemma-4-e2b-it-GGUF gemma-4-e2b-it-q4_k_s.gguf --local-dir /tmp/aether-model` |
+| Qwopus 3.6 35B-A3B | 32 GB+ | `huggingface-cli download unsloth/Qwen3.6-35B-A3B-GGUF Qwen3.6-35B-A3B-Q4_K_S.gguf --local-dir /tmp/aether-model` |
+| Gemma 4 26B-A4B | 32 GB+ | `huggingface-cli download unsloth/gemma-4-26b-it-GGUF gemma-4-26b-it-IQ2_M.gguf --local-dir /tmp/aether-model` |
+
+**3. Move the file into Aether's model directory:**
+
+```bash
+# Replace <model-id> with the ID from the table below
+mkdir -p ~/Library/Application\ Support/Aether/models/llamacpp/<model-id>/
+mv /tmp/aether-model/*.gguf ~/Library/Application\ Support/Aether/models/llamacpp/<model-id>/model.gguf
+```
+
+Model IDs:
+
+| Model | `<model-id>` |
+|---|---|
+| Qwopus 3.5 4B Coder | `qwopus-3.5-4b-coder-mtp-q4_k_m` |
+| Gemma 4 E2B | `gemma-4-e2b-it-q4_k_s` |
+| Qwopus 3.6 35B-A3B | `qwopus-3.6-35b-a3b-v1-q4_k_s` |
+| Gemma 4 26B-A4B | `gemma-4-26b-a4b-it-ud-iq2_m` |
+
+**4. Launch Aether.** The setup wizard will detect the file and skip the download.
 
 ---
 
@@ -94,12 +128,6 @@ Copy the exact client configuration snippet (with the right model ID and key) fr
 Each release is published here with a DMG attached. Release notes describe what changed.
 
 The installer script always installs the [latest release](../../releases/latest). To install a specific version, download the DMG from the corresponding release page.
-
-Current release metadata (used by the installer):
-
-```
-https://aether-models.ufrik.com/desktop/macos/latest.xml
-```
 
 ---
 
