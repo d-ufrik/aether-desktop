@@ -14,6 +14,12 @@ One OpenAI-compatible endpoint. Local models, cloud providers, usage tracking, a
 curl -fsSL https://aether-models.ufrik.com/desktop/macos/install.sh | sh
 ```
 
+OR
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/d-ufrik/aether-desktop/main/install.sh | sh
+```
+
 The installer downloads the latest DMG, verifies its checksum, installs `Aether.app` into `/Applications`, and launches it.
 
 **Manual download** — grab the latest DMG from the [Releases](../../releases) tab and drag `Aether.app` into Applications.

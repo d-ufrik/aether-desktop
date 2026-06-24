@@ -3,13 +3,27 @@
 ## Purpose
 
 This repo is the public distribution point for Aether Desktop.  
-It contains exactly two things:
+It contains exactly three things:
 
 1. `README.md` — the user-facing project description
-2. GitHub Releases — one per version, with release notes and the `.dmg` attached
+2. `install.sh` — the YOLO installer script (mirrored from the source repo)
+3. GitHub Releases — one per version, with release notes and the `.dmg` attached
 
-**No source code lives here. No build scripts. No internal docs.**  
+**No source code lives here. No build scripts beyond `install.sh`. No internal docs.**  
 The source lives in the private monorepo. This repo is what the public sees.
+
+### Two install URLs
+
+The installer is intentionally available from two sources:
+
+| URL | Purpose |
+|---|---|
+| `https://aether-models.ufrik.com/desktop/macos/install.sh` | Primary CDN path (R2). Used by the automated pipeline. |
+| `https://raw.githubusercontent.com/d-ufrik/aether-desktop/main/install.sh` | GitHub mirror. Acts as a trusted, auditable fallback. |
+
+Both scripts are identical. When updating `install.sh`, update it in both places:
+1. `packaging/macos/install.sh` in the source repo (source of truth)
+2. `install.sh` in this repo (copy it here and push)
 
 ---
 
