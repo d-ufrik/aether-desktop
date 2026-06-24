@@ -42,6 +42,12 @@ Releases should be marked **Pre-release** until the product reaches a stable pub
 
 ---
 
+## GitHub auto-generates "Source code" archives on every release
+
+Every GitHub release automatically shows two extra assets: **Source code (zip)** and **Source code (tar.gz)**. GitHub generates these itself — they cannot be removed or disabled. They contain only what is in this repo (README, install.sh, inference binaries) — no Rust, Swift, or TypeScript source code.
+
+---
+
 ## What does NOT go here
 
 - Source code of any kind (Rust, Swift, TypeScript, shell scripts)
