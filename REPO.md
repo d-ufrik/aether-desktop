@@ -56,25 +56,49 @@ If it is not the README or a release artifact, it does not belong here.
 
 ## Release workflow
 
-1. Build and verify the DMG locally:
+A GitHub Release is created **once per version, when the DMG is published to R2**. Do not create a release for every internal build or text-only change. The bar is: **a new DMG was built, uploaded to R2, and validated**.
+
+### What triggers a GitHub Release
+
+| Triggers a release | Does NOT trigger a release |
+|---|---|
+| New DMG built and uploaded to R2 | Changelog text fix |
+| New feature or bug fix shipped | README wording update |
+| New local model added to catalog | `install.sh` update (push to main, no release) |
+| Version bump in `Cargo.toml` | Documentation-only commit |
+
+### How to publish a release
+
+1. Build, validate, and upload the DMG to R2 (the normal build pipeline).
+
+2. Run from the source repo:
    ```bash
-   AETHER_VERSION=0.3.x.x packaging/macos/build.sh --arch arm64 --dmg
+   # Copy condensed release notes from backend/standalone/CHANGELOG.md
+   gh release create v0.3.x.x \
+     /path/to/Aether-0.3.x.x-arm64.dmg \
+     --repo d-ufrik/aether-desktop \
+     --title "Aether Desktop 0.3.x.x Beta" \
+     --prerelease \
+     --notes "$(cat notes.md)"
    ```
 
-2. Confirm the version passes health checks on the target machine.
+3. Release notes format (keep it user-facing — no internal paths, no NAS references, no dev jargon):
+   ```markdown
+   ## What's new
 
-3. Go to **[github.com/d-ufrik/aether-desktop/releases/new](https://github.com/d-ufrik/aether-desktop/releases/new)**
+   - **Feature name** — one sentence description.
+   - **Bug fix** — what the user experienced before and what works now.
 
-4. Fill in:
-   - Tag: `v0.3.x.x` (create new tag on publish)
-   - Title: `Aether Desktop v0.3.x.x`
-   - Description: condensed release notes from `backend/standalone/CHANGELOG.md`
-   - Attach: `Aether-0.3.x.x-arm64.dmg`
-   - Check **Pre-release** if still in beta
+   ## Requirements
 
-5. Publish.
+   | | |
+   |---|---|
+   | **Mac** | Apple Silicon (M1 or later) |
+   | **macOS** | Ventura 13.0 or later |
+   | **RAM** | 8 GB minimum · 16 GB recommended for local models |
+   ```
 
-The installer at `https://aether-models.ufrik.com/desktop/macos/install.sh` reads from `latest.xml` in R2 — it is independent of GitHub Releases. GitHub Releases is the public changelog and download history; R2 is the live install pipeline.
+The R2 install pipeline (`latest.xml`) is updated by the build script independently of GitHub Releases. The two are decoupled — a GitHub Release documents what shipped; R2 delivers it.
 
 ---
 
