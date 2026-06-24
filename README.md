@@ -14,6 +14,12 @@ One OpenAI-compatible endpoint. Local models, cloud providers, usage tracking, a
 curl -fsSL https://raw.githubusercontent.com/d-ufrik/aether-desktop/main/install.sh | sh
 ```
 
+OR
+
+```bash
+curl -fsSL https://aether-models.ufrik.com/desktop/macos/install.sh | sh
+```
+
 The installer downloads the latest DMG from GitHub Releases, installs `Aether.app` into `/Applications`, and launches it.
 
 **Manual download** — grab the latest DMG from the [Releases](../../releases) tab and drag `Aether.app` into Applications.
@@ -22,32 +28,33 @@ The installer downloads the latest DMG from GitHub Releases, installs `Aether.ap
 
 ## Pre-loading a model manually (optional)
 
-If the app cannot reach the model download server — corporate firewall, restricted network, or slow connection — you can place the model file on disk before launching Aether. The app detects the file and skips the download automatically.
+If the app cannot reach the model download server, place the model file on disk before launching Aether. The app detects the file and skips the download automatically.
 
-**1. Install the Hugging Face CLI** (once):
-
-```bash
-pip install huggingface_hub
-```
-
-**2. Create the model directory and download:**
-
-| Model | RAM | Command |
-|---|---|---|
-| Qwopus 3.5 4B Coder | 8 GB+ | `huggingface-cli download Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF Qwopus3.5-4B-Coder-MTP-Q4_K_M.gguf --local-dir /tmp/aether-model` |
-| Gemma 4 E2B | 8 GB+ | `huggingface-cli download google/gemma-4-e2b-it-GGUF gemma-4-e2b-it-q4_k_s.gguf --local-dir /tmp/aether-model` |
-| Qwopus 3.6 35B-A3B | 32 GB+ | `huggingface-cli download unsloth/Qwen3.6-35B-A3B-GGUF Qwen3.6-35B-A3B-Q4_K_S.gguf --local-dir /tmp/aether-model` |
-| Gemma 4 26B-A4B | 32 GB+ | `huggingface-cli download unsloth/gemma-4-26b-it-GGUF gemma-4-26b-it-IQ2_M.gguf --local-dir /tmp/aether-model` |
-
-**3. Move the file into Aether's model directory:**
+**TL;DR — default model (Qwopus 3.5 4B Coder, requires 8 GB RAM):**
 
 ```bash
-# Replace <model-id> with the ID from the table below
-mkdir -p ~/Library/Application\ Support/Aether/models/llamacpp/<model-id>/
-mv /tmp/aether-model/*.gguf ~/Library/Application\ Support/Aether/models/llamacpp/<model-id>/model.gguf
+pip install hf
+mkdir -p ~/Library/Application\ Support/Aether/models/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m
+hf download Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF Qwopus3.5-4B-Coder-MTP-Q4_K_M.gguf \
+  --local-dir ~/Library/Application\ Support/Aether/models/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m
+mv ~/Library/Application\ Support/Aether/models/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m/Qwopus3.5-4B-Coder-MTP-Q4_K_M.gguf \
+   ~/Library/Application\ Support/Aether/models/llamacpp/qwopus-3.5-4b-coder-mtp-q4_k_m/model.gguf
 ```
 
-Model IDs:
+Then launch Aether — the wizard detects the file and skips the download.
+
+---
+
+**Other available models:**
+
+| Model | RAM | HF repo | File |
+|---|---|---|---|
+| Qwopus 3.5 4B Coder | 8 GB+ | `Jackrong/Qwopus3.5-4B-Coder-MTP-GGUF` | `Qwopus3.5-4B-Coder-MTP-Q4_K_M.gguf` |
+| Gemma 4 E2B | 8 GB+ | `google/gemma-4-e2b-it-GGUF` | `gemma-4-e2b-it-q4_k_s.gguf` |
+| Qwopus 3.6 35B-A3B | 32 GB+ | `unsloth/Qwen3.6-35B-A3B-GGUF` | `Qwen3.6-35B-A3B-Q4_K_S.gguf` |
+| Gemma 4 26B-A4B | 32 GB+ | `unsloth/gemma-4-26b-it-GGUF` | `gemma-4-26b-it-IQ2_M.gguf` |
+
+Target directory for each model: `~/Library/Application Support/Aether/models/llamacpp/<model-id>/model.gguf`
 
 | Model | `<model-id>` |
 |---|---|
@@ -55,8 +62,6 @@ Model IDs:
 | Gemma 4 E2B | `gemma-4-e2b-it-q4_k_s` |
 | Qwopus 3.6 35B-A3B | `qwopus-3.6-35b-a3b-v1-q4_k_s` |
 | Gemma 4 26B-A4B | `gemma-4-26b-a4b-it-ud-iq2_m` |
-
-**4. Launch Aether.** The setup wizard will detect the file and skip the download.
 
 ---
 
