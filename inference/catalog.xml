@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aether-inference-servers>
+  <version>1</version>
+  <generated-at>2026-06-20T05:51:36Z</generated-at>
+  <server id="mainline-m1">
+    <engine>llama-server</engine>
+    <variant>mainline</variant>
+    <tier>m1</tier>
+    <version>mainline-m1-7dad2f1</version>
+    <ref>b9660</ref>
+    <commit>7dad2f1</commit>
+    <built-at>2026-06-19T23:51:36-0600</built-at>
+    <download>
+      <url>https://aether-models.ufrik.com/inference/llama-server/mainline-m1.tar.gz</url>
+      <size-bytes>6363073</size-bytes>
+      <sha256>c560df5cd3ecf8dc4a02ea1d708305454b032c34a5f3ce2fe80f8ef7978f6c12</sha256>
+    </download>
+    <binary-sha256>23793a5b3e704dbacbc4e39ba2946c287236aecf56e70aeadfe0f3964b0409a7</binary-sha256>
+    <capabilities>
+      <mtp>true</mtp>
+      <turboquant>false</turboquant>
+    </capabilities>
+  </server>
+  <server id="mainline-rest">
+    <engine>llama-server</engine>
+    <variant>mainline</variant>
+    <tier>rest</tier>
+    <version>mainline-rest-e37abd6b5</version>
+    <ref>b9616-or-later</ref>
+    <commit>e37abd6b5</commit>
+    <built-at>2026-06-12T17:13:24-0600</built-at>
+    <download>
+      <url>https://aether-models.ufrik.com/inference/llama-server/mainline-rest.tar.gz</url>
+      <size-bytes>6422176</size-bytes>
+      <sha256>2cc2584b76623052ac38af7eb348e6099097a58e3c11834e2ac43d6ed8834286</sha256>
+    </download>
+    <binary-sha256>9ee8a41fd06acff6e478df0df7da44241ea7add6752462ba7b1df64436aa6d09</binary-sha256>
+    <capabilities>
+      <mtp>true</mtp>
+      <turboquant>false</turboquant>
+    </capabilities>
+  </server>
+  <server id="turboquant-m1">
+    <engine>llama-server</engine>
+    <variant>turboquant</variant>
+    <tier>m1</tier>
+    <version>turboquant-m1-f0d5cc9</version>
+    <ref>feature/turboquant-kv-cache</ref>
+    <commit>f0d5cc9</commit>
+    <built-at>2026-06-12T17:27:24-0600</built-at>
+    <download>
+      <url>https://aether-models.ufrik.com/inference/llama-server/turboquant-m1.tar.gz</url>
+      <size-bytes>5536495</size-bytes>
+      <sha256>e89568d27f5063c07113745bd2d61985476c22422609ef4b5e7f92b1b66d9e08</sha256>
+    </download>
+    <binary-sha256>2e42bbbb9c9abdfca823817e9e9312b35020e33424abd9b9ccedccd8d2519638</binary-sha256>
+    <capabilities>
+      <mtp>true</mtp>
+      <turboquant>true</turboquant>
+    </capabilities>
+  </server>
+  <server id="turboquant-rest">
+    <engine>llama-server</engine>
+    <variant>turboquant</variant>
+    <tier>rest</tier>
+    <version>turboquant-rest-f0d5cc9</version>
+    <ref>feature/turboquant-kv-cache</ref>
+    <commit>f0d5cc9</commit>
+    <built-at>2026-06-12T17:28:21-0600</built-at>
+    <download>
+      <url>https://aether-models.ufrik.com/inference/llama-server/turboquant-rest.tar.gz</url>
+      <size-bytes>5515978</size-bytes>
+      <sha256>a5aab83dc441dbf1417ef19934bb0f8d6f3877dc654745c98e768b628712feff</sha256>
+    </download>
+    <binary-sha256>637fa95c76209ac8f87f5f45445132a474f03e720d423e2c6b8b7b52b79e8c28</binary-sha256>
+    <capabilities>
+      <mtp>true</mtp>
+      <turboquant>true</turboquant>
+    </capabilities>
+  </server>
+</aether-inference-servers>
