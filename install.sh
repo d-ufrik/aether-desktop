@@ -13,12 +13,12 @@ GITHUB_REPO="d-ufrik/aether-desktop"
 APP_NAME="Aether"
 APP_PATH="/Applications/${APP_NAME}.app"
 TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/aether-install.XXXXXX")"
-MOUNT_DIR="$TMP_DIR/mount"
-DMG="$HOME/Downloads/Aether-latest-arm64.dmg"
+DMG="$TMP_DIR/Aether-latest-arm64.dmg"
+MOUNT_DIR=""
 
 cleanup() {
-  if mount | grep -q "$MOUNT_DIR" 2>/dev/null; then
-    hdiutil detach "$MOUNT_DIR" >/dev/null 2>&1 || true
+  if [ -n "$MOUNT_DIR" ]; then
+    hdiutil detach "$MOUNT_DIR" -force >/dev/null 2>&1 || true
   fi
   rm -rf "$TMP_DIR"
 }
@@ -49,7 +49,7 @@ need curl
 need hdiutil
 need sed
 
-mkdir -p "$HOME/Downloads" "$MOUNT_DIR"
+mkdir -p "$HOME/Downloads"
 
 say "fetching latest release info from GitHub"
 RELEASE_JSON="$TMP_DIR/release.json"
@@ -71,10 +71,15 @@ say "downloading Aether Desktop $VERSION"
 curl -fL "$URL" -o "$DMG"
 
 say "mounting DMG"
-hdiutil attach "$DMG" -nobrowse -readonly -mountpoint "$MOUNT_DIR" >/dev/null
+MOUNT_DIR="$(hdiutil attach "$DMG" -nobrowse -readonly | awk -F'\t' '/\/Volumes\// {print $NF; exit}')"
+
+if [ -z "$MOUNT_DIR" ]; then
+  printf '%s\n' "aether-install: could not mount DMG" >&2
+  exit 1
+fi
 
 if [ ! -d "$MOUNT_DIR/$APP_NAME.app" ]; then
-  printf '%s\n' "aether-install: $APP_NAME.app not found in mounted DMG" >&2
+  printf '%s\n' "aether-install: $APP_NAME.app not found in mounted DMG ($MOUNT_DIR)" >&2
   exit 1
 fi
 
