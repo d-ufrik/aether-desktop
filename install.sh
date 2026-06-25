@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 # Aether Desktop installer.
 #
-# Downloads the latest arm64 DMG from GitHub Releases and installs it.
+# Resolves the latest arm64 DMG from the R2 subdomain (aether-models.ufrik.com)
+# first, falling back to GitHub Releases if the subdomain is unreachable, then
+# installs it. Same subdomain-first chain the app uses for the model catalog.
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/d-ufrik/aether-desktop/main/install.sh | sh
@@ -10,6 +12,11 @@
 set -eu
 
 GITHUB_REPO="d-ufrik/aether-desktop"
+# Primary source of truth for "what is the latest DMG": the R2 subdomain
+# metadata, same host the app uses for the model catalog. GitHub Releases is
+# only the fallback — its /releases/latest pointer ranks by tag-commit date,
+# not version, so it can go stale (incident 2026-06-25). Subdomain first.
+LATEST_XML_URL="https://aether-models.ufrik.com/desktop/macos/latest.xml"
 APP_NAME="Aether"
 APP_PATH="/Applications/${APP_NAME}.app"
 TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/aether-install.XXXXXX")"
@@ -51,15 +58,29 @@ need sed
 
 mkdir -p "$HOME/Downloads"
 
-say "fetching latest release info from GitHub"
-RELEASE_JSON="$TMP_DIR/release.json"
-curl -fsSL "https://api.github.com/repos/${GITHUB_REPO}/releases/latest" -o "$RELEASE_JSON"
+VERSION=""
+URL=""
 
-VERSION="$(sed -n 's/.*"tag_name": *"v\{0,1\}\([^"]*\)".*/\1/p' "$RELEASE_JSON" | head -n 1)"
-URL="$(sed -n 's/.*"browser_download_url": *"\([^"]*arm64\.dmg\)".*/\1/p' "$RELEASE_JSON" | head -n 1)"
+# 1) Primary: R2 subdomain latest.xml (authoritative, set by publish-update.sh).
+say "checking latest version (aether-models.ufrik.com)"
+LATEST_XML="$TMP_DIR/latest.xml"
+if curl -fsSL "$LATEST_XML_URL" -o "$LATEST_XML" 2>/dev/null; then
+  VERSION="$(sed -n 's:.*<version>\([^<]*\)</version>.*:\1:p' "$LATEST_XML" | head -n 1)"
+  URL="$(sed -n 's:.*<dmg>\([^<]*\)</dmg>.*:\1:p' "$LATEST_XML" | head -n 1)"
+fi
+
+# 2) Fallback: GitHub Releases (only if the subdomain was unreachable / empty).
+if [ -z "$URL" ]; then
+  say "subdomain unavailable — falling back to GitHub Releases"
+  RELEASE_JSON="$TMP_DIR/release.json"
+  if curl -fsSL "https://api.github.com/repos/${GITHUB_REPO}/releases/latest" -o "$RELEASE_JSON" 2>/dev/null; then
+    VERSION="$(sed -n 's/.*"tag_name": *"v\{0,1\}\([^"]*\)".*/\1/p' "$RELEASE_JSON" | head -n 1)"
+    URL="$(sed -n 's/.*"browser_download_url": *"\([^"]*arm64\.dmg\)".*/\1/p' "$RELEASE_JSON" | head -n 1)"
+  fi
+fi
 
 if [ -z "$URL" ]; then
-  printf '%s\n' "aether-install: could not find arm64 DMG in latest release" >&2
+  printf '%s\n' "aether-install: could not determine latest DMG from subdomain or GitHub" >&2
   exit 1
 fi
 
