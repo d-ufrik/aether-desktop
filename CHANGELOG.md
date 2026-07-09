@@ -11,6 +11,12 @@ macOS 12+ on Apple Silicon (arm64).
 
 ---
 
+## 0.3.1.65 — 2026-07-09
+
+- **Hermes config safety.** Setting Hermes's model now changes **only** the main model — your compaction, delegation, gateways, and every other setting are left untouched, and your `config.yaml` keeps its comments and formatting.
+- Aether shows your **current** main model and asks before replacing a custom (non-local) one — no silent changes.
+- Your Hermes config is backed up before any change.
+
 ## 0.3.1.64 — 2026-07-09
 
 - **Hermes Agent reliability.** Hermes is now pointed at the correct, running local model automatically (fixes an "Unknown model" error). Agents only offer models whose server is actually running.
